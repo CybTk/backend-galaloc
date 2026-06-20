@@ -11,6 +11,16 @@ app.use(cors());
 const PORT = process.env.PORT || 8080;
 
 // ==========================================
+// 0. ENDPOINT ROOT (Untuk Indikator Hubungkan Frontend)
+// ==========================================
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Galaloc.std API Server is running"
+  });
+});
+
+// ==========================================
 // 1. ENDPOINT /health
 // ==========================================
 app.get('/health', async (req, res) => {
@@ -102,11 +112,7 @@ app.post('/projects', async (req, res) => {
   try {
     const { title, platform, difficulty, status } = req.body;
     const newData = await Project.create({ title, platform, difficulty, status });
-    res.status(201).json({
-      status: "success",
-      message: "Data created successfully",
-      data: newData
-    });
+    res.status(201).json(newData); 
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
@@ -124,11 +130,7 @@ app.put('/projects/:id', async (req, res) => {
     }
     
     await data.update({ title, platform, difficulty, status });
-    res.status(200).json({
-      status: "success",
-      message: "Data updated successfully",
-      data: data
-    });
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
