@@ -1,12 +1,12 @@
 const express = require('express');
 const sequelize = require('./db');
 const Project = require('./projectModel');
-const cors = require('cors');
+const cors = require('cors'); // Tambahan CORS
 require('dotenv').config();
 
 const app = express();
 app.use(express.json()); // Supaya backend bisa membaca request body berformat JSON
-app.use(cors());
+app.use(cors()); // Mengaktifkan akses CORS untuk Frontend App Engine
 
 const PORT = process.env.PORT || 8080;
 
@@ -40,7 +40,7 @@ app.get('/health', async (req, res) => {
 });
 
 // ==========================================
-// 2. ENDPOINT /schema
+// 2. ENDPOINT /schema (Sudah Diperbaiki Strukturnya)
 // ==========================================
 app.get('/schema', (req, res) => {
   res.status(200).json({
@@ -51,20 +51,20 @@ app.get('/schema', (req, res) => {
     resource: {
       name: "projects",
       label: "Data Manajemen Proyek Studio",
-      description: "Aplikasi untuk mengelola data proyek pada Galaloc.std",
-      fields: [
-        { name: "title", label: "Nama Proyek", type: "text", required: true, showInTable: true },
-        { name: "platform", label: "Platform", type: "text", required: true, showInTable: true },
-        { name: "difficulty", label: "Tingkat Kesulitan (1-5)", type: "number", required: true, showInTable: true },
-        { name: "status", label: "Status Proyek", type: "text", required: true, showInTable: true }
-      ],
-      endpoints: {
-        list: "/projects",
-        detail: "/projects/{id}",
-        create: "/projects",
-        update: "/projects/{id}",
-        delete: "/projects/{id}"
-      }
+      description: "Aplikasi untuk mengelola data proyek pada Galaloc.std"
+    },
+    fields: [
+      { name: "title", label: "Nama Proyek", type: "text", required: true, showInTable: true },
+      { name: "platform", label: "Platform", type: "text", required: true, showInTable: true },
+      { name: "difficulty", label: "Tingkat Kesulitan (1-5)", type: "number", required: true, showInTable: true },
+      { name: "status", label: "Status Proyek", type: "text", required: true, showInTable: true }
+    ],
+    endpoints: {
+      list: "/projects",
+      detail: "/projects/{id}",
+      create: "/projects",
+      update: "/projects/{id}",
+      delete: "/projects/{id}"
     }
   });
 });
@@ -75,11 +75,7 @@ app.get('/schema', (req, res) => {
 app.get('/projects', async (req, res) => {
   try {
     const data = await Project.findAll();
-    res.status(200).json({
-      status: "success",
-      message: "Data retrieved successfully",
-      data: data
-    });
+    res.status(200).json(data); // Diubah langsung mengembalikan Array data agar sesuai standarisasi fetch frontend
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
@@ -94,11 +90,7 @@ app.get('/projects/:id', async (req, res) => {
     if (!data) {
       return res.status(404).json({ status: "error", message: "Data not found" });
     }
-    res.status(200).json({
-      status: "success",
-      message: "Data retrieved successfully",
-      data: data
-    });
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
