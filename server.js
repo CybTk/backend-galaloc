@@ -1,10 +1,12 @@
 const express = require('express');
 const sequelize = require('./db');
 const Project = require('./projectModel');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json()); // Supaya backend bisa membaca request body berformat JSON
+app.use(cors());
 
 const PORT = process.env.PORT || 8080;
 
