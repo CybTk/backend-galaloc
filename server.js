@@ -1,12 +1,12 @@
 const express = require('express');
 const sequelize = require('./db');
 const Project = require('./projectModel');
-const cors = require('cors'); // Tambahan CORS
+const cors = require('cors'); 
 require('dotenv').config();
 
 const app = express();
-app.use(express.json()); // Supaya backend bisa membaca request body berformat JSON
-app.use(cors()); // Mengaktifkan akses CORS untuk Frontend App Engine
+app.use(express.json()); 
+app.use(cors()); 
 
 const PORT = process.env.PORT || 8080;
 
@@ -15,7 +15,6 @@ const PORT = process.env.PORT || 8080;
 // ==========================================
 app.get('/health', async (req, res) => {
   try {
-    // Mencoba melakukan query ke database untuk memastikan koneksi aman
     await sequelize.authenticate();
     res.status(200).json({
       status: "success",
@@ -40,7 +39,7 @@ app.get('/health', async (req, res) => {
 });
 
 // ==========================================
-// 2. ENDPOINT /schema (Sudah Diperbaiki Strukturnya)
+// 2. ENDPOINT /schema
 // ==========================================
 app.get('/schema', (req, res) => {
   res.status(200).json({
@@ -75,7 +74,7 @@ app.get('/schema', (req, res) => {
 app.get('/projects', async (req, res) => {
   try {
     const data = await Project.findAll();
-    res.status(200).json(data); // Diubah langsung mengembalikan Array data agar sesuai standarisasi fetch frontend
+    res.status(200).json(data); 
   } catch (error) {
     res.status(500).json({ status: "error", message: error.message });
   }
@@ -156,11 +155,10 @@ app.delete('/projects/:id', async (req, res) => {
 });
 
 // Menjalankan Server
-// Jalankan Sinkronisasi Database sebelum Server Menyala
 sequelize.sync().then(() => {
-  console.log('Database synchronized with VM assistant successfully.');
+  console.log('Database synchronized successfully.');
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
   });
 }).catch(err => {
   console.error('Failed to sync database:', err);
